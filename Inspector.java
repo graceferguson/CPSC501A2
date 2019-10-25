@@ -14,23 +14,23 @@ public class Inspector {
 		System.out.println("CLASS NAME");
 		printTabs(depth);
 		System.out.println(c.getSimpleName());
-		//printTabs(depth);
-		//System.out.println("SUPERCLASS NAME");
-		//System.out.println(c.getSuperclass().getSimpleName());
-
 		
+
+		if ((c.getSuperclass() != null) && (recursive == true)){
+			printTabs(depth);
+			System.out.println("============================");
+			printTabs(depth);
+			System.out.println("SUPERCLASS NAME");
+			printTabs(depth);
+			System.out.println(c.getSuperclass().getSimpleName());
+			inspectClass(c.getSuperclass(), obj, recursive, depth + 2);
+		}
+
 		inspectInterfaces(c, obj, recursive, depth);
 		inspectConstructors(c, obj, recursive, depth);
 		inspectMethods(c, obj, recursive, depth);
 		inspectFields(c, obj, recursive, depth);
 		
-		if (c.getSuperclass() != null) {
-			depth = depth + 2;
-			System.out.println("============================");
-			System.out.println("SUPERCLASS NAME" + "\n" + c.getSuperclass().getSimpleName());
-			inspectClass(c.getSuperclass(), obj, recursive, depth);
-		}
-
 	}
 	
 	private void printTabs(int depth){
@@ -54,6 +54,8 @@ public class Inspector {
 			for (int i = 0; i < length; i++) {
 				printTabs(depth);
 				System.out.println(interfaces[i].getSimpleName());
+				
+				inspectClass(interfaces[i], obj, recursive, depth + 2);
 			}
 		}
 	}
@@ -67,6 +69,7 @@ public class Inspector {
 		System.out.println("CONSTRUCTORS");
 
 		if (constructorLength == 0) {
+			printTabs(depth);
 			System.out.println("None");
 		} else {
 			for (int i = 0; i < constructorLength; i++) {
@@ -198,6 +201,7 @@ public class Inspector {
 				printTabs(depth);
 				System.out.println(Modifier.toString(modifierInt));
 
+				printTabs(depth);
 				System.out.println("CURRENT VALUE");
 				try {
 					Object value = x.get(obj);
