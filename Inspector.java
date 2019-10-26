@@ -7,6 +7,7 @@ public class Inspector {
 		inspectClass(c, obj, recursive, 0);
 	}
 
+	//inspecting class (runs recursion on classes)
 	private void inspectClass(Class c, Object obj, boolean recursive, int depth) {
 		printTabs(depth);
 		System.out.println("============================");
@@ -33,25 +34,27 @@ public class Inspector {
 		
 	}
 	
+	//method for adding tabs to print statements
 	private void printTabs(int depth){
 		for(int i = 0; i < depth; i++){
 		System.out.print("\t");
 		}
 	}
-
+	
+	//inspects interfaces (runs recursion on interfaces)
 	private void inspectInterfaces(Class c, Object obj, boolean recursive, int depth) {
 		Class[] interfaces = c.getInterfaces();
-		int length = interfaces.length;
+		int interfaceLength = interfaces.length;
 		printTabs(depth);
 		System.out.println("============================");
 		printTabs(depth);
 		System.out.println("INTERFACES");
 
-		if (length == 0) {
+		if (interfaceLength == 0) {
 			printTabs(depth);
 			System.out.println("None");
 		} else {
-			for (int i = 0; i < length; i++) {
+			for (int i = 0; i < interfaceLength; i++) {
 				printTabs(depth);
 				System.out.println(interfaces[i].getSimpleName());
 				
@@ -60,6 +63,7 @@ public class Inspector {
 		}
 	}
 
+	//inspects constructors 
 	private void inspectConstructors(Class c, Object obj, boolean recursive, int depth) {
 		Constructor[] constructors = c.getDeclaredConstructors();
 		int constructorLength = constructors.length;
@@ -73,12 +77,12 @@ public class Inspector {
 			System.out.println("None");
 		} else {
 			for (int i = 0; i < constructorLength; i++) {
-				Constructor x = constructors[i];
+				Constructor currentCon = constructors[i];
 				printTabs(depth);
 				System.out.println("===============");
 				printTabs(depth);
-				System.out.println(x.getName());
-				Class[] parameters = x.getParameterTypes();
+				System.out.println(currentCon.getName());
+				Class[] parameters = currentCon.getParameterTypes();
 				int parametersLength = parameters.length;
 				printTabs(depth);
 				System.out.println("PARAMETER TYPES");
@@ -95,7 +99,7 @@ public class Inspector {
 
 				printTabs(depth);
 				System.out.println("MODIFIERS");
-				int modifierInt = x.getModifiers();
+				int modifierInt = currentCon.getModifiers();
 				printTabs(depth);
 				System.out.println(Modifier.toString(modifierInt));
 
@@ -104,6 +108,7 @@ public class Inspector {
 
 	}
 
+	//inspects methods
 	private void inspectMethods(Class c, Object obj, boolean recursive, int depth) {
 		Method[] methods = c.getDeclaredMethods();
 		int methodsLength = methods.length;
@@ -117,15 +122,15 @@ public class Inspector {
 			System.out.println("None");
 		} else {
 			for (int i = 0; i < methodsLength; i++) {
-				Method x = methods[i];
+				Method currentMethod = methods[i];
 				printTabs(depth);
 				System.out.println("===============");
 				printTabs(depth);
-				System.out.println(x.getName());
+				System.out.println(currentMethod.getName());
 
 				printTabs(depth);
 				System.out.println("EXCEPTIONS");
-				Class[] exceptions = x.getExceptionTypes();
+				Class[] exceptions = currentMethod.getExceptionTypes();
 				int exceptionsLength = exceptions.length;
 				if (exceptionsLength == 0) {
 					printTabs(depth);
@@ -139,7 +144,7 @@ public class Inspector {
 
 				printTabs(depth);
 				System.out.println("PARAMETER TYPES");
-				Class[] parameters = x.getParameterTypes();
+				Class[] parameters = currentMethod.getParameterTypes();
 				int parametersLength = parameters.length;
 				if (parametersLength == 0) {
 					printTabs(depth);
@@ -153,13 +158,13 @@ public class Inspector {
 
 				printTabs(depth);
 				System.out.println("RETURN TYPE");
-				Class returnType = x.getReturnType();
+				Class returnType = currentMethod.getReturnType();
 				printTabs(depth);
 				System.out.println(returnType.getSimpleName());
 
 				printTabs(depth);
 				System.out.println("MODIFIERS");
-				int modifierInt = x.getModifiers();
+				int modifierInt = currentMethod.getModifiers();
 				printTabs(depth);
 				System.out.println(Modifier.toString(modifierInt));
 
@@ -167,6 +172,7 @@ public class Inspector {
 		}
 	}
 
+	//inspects fields
 	private void inspectFields(Class c, Object obj, boolean recursive, int depth) {
 		Field[] fields = c.getDeclaredFields();
 		int fieldsLength = fields.length;
@@ -180,31 +186,31 @@ public class Inspector {
 			System.out.println("None");
 		} else {
 			for (int i = 0; i < fieldsLength; i++) {
-				Field x = fields[i];
+				Field currentField = fields[i];
 				printTabs(depth);
 				System.out.println("===============");
 				printTabs(depth);
-				System.out.println(x.getName());
+				System.out.println(currentField.getName());
 
-				if (!Modifier.isPublic(x.getModifiers())) {
-					x.setAccessible(true);
+				if (!Modifier.isPublic(currentField.getModifiers())) {
+					currentField.setAccessible(true);
 				}
 
 				printTabs(depth);
 				System.out.println("TYPES");
 				printTabs(depth);
-				System.out.println(x.getType().getSimpleName());
+				System.out.println(currentField.getType().getSimpleName());
 
 				printTabs(depth);
 				System.out.println("MODIFIERS");
-				int modifierInt = x.getModifiers();
+				int modifierInt = currentField.getModifiers();
 				printTabs(depth);
 				System.out.println(Modifier.toString(modifierInt));
 
 				printTabs(depth);
 				System.out.println("CURRENT VALUE");
 				try {
-					Object value = x.get(obj);
+					Object value = currentField.get(obj);
 					printTabs(depth);
 					System.out.println(value);
 				} catch (IllegalArgumentException | IllegalAccessException e) {
